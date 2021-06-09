@@ -36,3 +36,6 @@ def statusPorts():
             'statusWC' : 0
            }
     return data
+
+statusStreaming = statusPorts()
+print(statusStreaming)

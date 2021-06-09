@@ -18,22 +18,9 @@ options = {
 topics = {
     'subscriber': [
         f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getChannel',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/urlStreaming',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getStatus',
+        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/changeStreaming'
         ],
     'publish':[
         f'{clientPlayer}/{sede}/alternadora/{idPlayer}/currentStreaming',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/status'
     ]
 }
-
-# broker = index.options['broker']
-# port = 1883
-# client_id = 5456464
-# username = index.options['username']
-# password = index.options['password']
-#
-# topic = index.topics['subscriber'][0]
-#
-#
-# print(password)
