@@ -1,7 +1,10 @@
 from paho.mqtt import client as mqtt_client
 from broker import index
 from Control import control
-import random, json, time
+from Control import ir
+import random, json, time, lirc
+
+
 
 broker = index.options['broker']
 port = int(index.options['port'])
@@ -12,6 +15,8 @@ password = index.options['password']
 # topics
 getChannel = index.topics['subscriber'][0]
 changeStreaming = index.topics['subscriber'][1]
+changeVolumen = index.topics['subscriber'][2]
+
 
 currentStreaming = index.topics['publish'][0]
 
@@ -33,8 +38,9 @@ def subscribe(client: mqtt_client):
 
     client.subscribe(getChannel)
     client.subscribe(changeStreaming)
+    client.subscribe(changeVolumen)
 
-    print(f'Subscription Success to topics \n {getChannel} \n {changeStreaming}')
+    print(f'Subscription Success to topics \n {getChannel} \n {changeStreaming} \n {changeVolumen}')
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         message = json.loads(msg.payload.decode())
@@ -61,6 +67,15 @@ def subscribe(client: mqtt_client):
                 data = control.statusPorts()
                 time.sleep(0.2)
                 client.publish(currentStreaming, json.dumps(data))
+            else:
+                print('nothing')
+
+        elif msg.topic == changeVolumen:
+            if message['volumen'] == 'mas':
+                print(f'Simulando subir Volumen')
+                time.sleep(0.2)
+                # ir.changeChannel('kalley','five','six')
+                ir.onOff()
             else:
                 print('nothing')
 

@@ -18,7 +18,8 @@ options = {
 topics = {
     'subscriber': [
         f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getChannel',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/changeStreaming'
+        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/changeStreaming',
+        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/volumen'
         ],
     'publish':[
         f'{clientPlayer}/{sede}/alternadora/{idPlayer}/currentStreaming',
