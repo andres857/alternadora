@@ -1,7 +1,7 @@
 from paho.mqtt import client as mqtt_client
 from broker import index
-from Control import control
-from Control import ir
+# from Control import control
+from Control import ir, system
 import random, json, time, lirc
 
 
@@ -14,11 +14,12 @@ password = index.options['password']
 
 # topics
 getChannel = index.topics['subscriber'][0]
-changeStreaming = index.topics['subscriber'][1]
-changeVolumen = index.topics['subscriber'][2]
+channel = index.topics['subscriber'][1]
+getStatus = index.topics['subscriber'][2]
 
 
-currentStreaming = index.topics['publish'][0]
+status = index.topics['publish'][0]
+
 
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
@@ -37,45 +38,39 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
 
     client.subscribe(getChannel)
-    client.subscribe(changeStreaming)
-    client.subscribe(changeVolumen)
+    client.subscribe(channel)
+    client.subscribe(getStatus)
 
-    print(f'Subscription Success to topics \n {getChannel} \n {changeStreaming} \n {changeVolumen}')
+
+    print(f'Subscription Success to topics \n {getChannel} \n {getStatus} \n {channel}')
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         message = json.loads(msg.payload.decode())
 
-        if msg.topic == getChannel:
-            if message['getChannel'] == 'true':
-                data = control.statusPorts()
-                print('Estado antes de evaluar data')
-                print(data)
-                if data['statusWC'] == 1 :
-                    print(f'Emision Actual: Canal Institucional')
-                    client.publish(currentStreaming, json.dumps(data))
-                else:
-                    data = control.statusPorts()
-                    time.sleep(0.2)
-                    print(f'Emision Actual: Canal Comercial')
-                    client.publish(currentStreaming, json.dumps(data))
-            else:
-                print('nothing')
+        if msg.topic == getStatus:
+            if message['status'] == 'get':
+                print('simular publicando estados')
+                # statusdict = system.statusAlternadora()
+                # statusjson = json.dumps(statusdict)
 
-        elif msg.topic == changeStreaming:
-            if message['changeStreaming'] == 'true':
-                control.alternateChannel()
-                data = control.statusPorts()
-                time.sleep(0.2)
-                client.publish(currentStreaming, json.dumps(data))
-            else:
-                print('nothing')
+                client.publish(status, json.dumps(system.statusAlternadora()))
 
-        elif msg.topic == changeVolumen:
-            if message['volumen'] == 'mas':
-                print(f'Simulando subir Volumen')
+        elif msg.topic == channel:
+            if message['channel'] == 'caracol':
+                print(f'Simulando cambiar canal a caracol')
                 time.sleep(0.2)
-                # ir.changeChannel('kalley','five','six')
-                ir.onOff()
+                ir.changeChannel('caracol')
+            elif message['channel'] == 'rcn':
+                print(f'Simulando cambiar canal a rcn')
+                time.sleep(0.2)
+                ir.changeChannel('rcn')
+            elif message['channel'] == 'colombia':
+                print(f'Simulando cambiar canal a Senal Colombia')
+                time.sleep(0.2)
+                ir.changeChannel('colombia')
+            elif message['channel'] == 'imbanaco':
+                ir.changeChannel('imbanaco')
+
             else:
                 print('nothing')
 
