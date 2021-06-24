@@ -5,6 +5,10 @@ from Control import ir, system
 import random, json, time, lirc
 
 
+channels = {
+        "currentStreaming": 'caracol',
+    }
+
 
 broker = index.options['broker']
 port = int(index.options['port'])
@@ -13,13 +17,14 @@ username = index.options['username']
 password = index.options['password']
 
 # topics
-getChannel = index.topics['subscriber'][0]
+
+getStatus = index.topics['subscriber'][0]
 channel = index.topics['subscriber'][1]
-getStatus = index.topics['subscriber'][2]
+
 
 
 status = index.topics['publish'][0]
-
+currentStreaming = index.topics['publish'][1]
 
 def connect_mqtt() -> mqtt_client:
     def on_connect(client, userdata, flags, rc):
@@ -37,12 +42,12 @@ def connect_mqtt() -> mqtt_client:
 
 def subscribe(client: mqtt_client):
 
-    client.subscribe(getChannel)
-    client.subscribe(channel)
+
     client.subscribe(getStatus)
+    client.subscribe(channel)
 
 
-    print(f'Subscription Success to topics \n {getChannel} \n {getStatus} \n {channel}')
+    print(f'Subscription Success to topics \n {getStatus} \n {channel}')
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         message = json.loads(msg.payload.decode())
@@ -60,16 +65,24 @@ def subscribe(client: mqtt_client):
                 print(f'Simulando cambiar canal a caracol')
                 time.sleep(0.2)
                 ir.changeChannel('caracol')
+                time.sleep(0.2)
+                client.publish(currentStreaming, json.dumps({"currentStreaming": "caracol"}))
             elif message['channel'] == 'rcn':
                 print(f'Simulando cambiar canal a rcn')
                 time.sleep(0.2)
                 ir.changeChannel('rcn')
-            elif message['channel'] == 'colombia':
+                time.sleep(0.2)
+                print(currentStreaming)
+                client.publish(currentStreaming, json.dumps({"currentStreaming": "rcn"}))
+            elif message['channel'] == 'scolombia':
                 print(f'Simulando cambiar canal a Senal Colombia')
                 time.sleep(0.2)
                 ir.changeChannel('colombia')
-            elif message['channel'] == 'imbanaco':
-                ir.changeChannel('imbanaco')
+                client.publish(currentStreaming, json.dumps({"currentStreaming": "senalcolombia"}))
+            elif message['channel'] == 'imbanacotv':
+                #ir.changeChannel('imbanaco')
+                print('canal imbanaco')
+                client.publish(currentStreaming, json.dumps({"currentStreaming": "imbanacotv"}))
 
             else:
                 print('nothing')

@@ -4,12 +4,12 @@ from Control import control
 
 clientIR = lirc.Client()
 
-decodificador = 'kronos'
+decodificador = 'etb'
 channels = {
-    'caracol' : [0,1],
-    'rcn' : [0,5],
-    'colombia' : [0,6],
-    'capital' : [1,1]
+    'caracol' : [2,7,6],
+    'rcn' : [2,7,7],
+    'colombia' : [5,1,0],
+    'capital' : [2,5,6]
 }
 
 def changeChannel(channel):
@@ -27,8 +27,8 @@ def changeChannel(channel):
             try:
                 for tecla in channels[f'{channel}']:
                     print (tecla)
-                    clientIR.send_once(decodificador, tecla, repeat_count=1)
-                    time.sleep(1)
+                    clientIR.send_once(decodificador, tecla)
+                    time.sleep(1.5)
                 time.sleep(3.5)
             except:
                 print(f'el canal no esta en la lista de canales COMERCIALES')
@@ -36,8 +36,8 @@ def changeChannel(channel):
             try:
                 for tecla in channels[f'{channel}']:
                     print (tecla)
-                    clientIR.send_once(decodificador, tecla, repeat_count=1)
-                    time.sleep(1)
+                    clientIR.send_once(decodificador, tecla)
+                    time.sleep(5)
                 time.sleep(3.5)
             except:
                 print(f'el canal no esta en la lista de canales COMERCIALES')
@@ -45,4 +45,4 @@ def changeChannel(channel):
             control.alternateChannel()
             print(f'se cambio la emision a COMERCIAL')
 
-# changeChannel('capital')
+#changeChannel('capital')

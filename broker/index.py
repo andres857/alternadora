@@ -3,13 +3,12 @@ import random
 
 clientPlayer = 'imbanaco'
 sede = 'principal'
-idPlayer = 'rjhgejhge'
-client_id = f'python-mqtt-{random.randint(0, 1000)}'
+idPlayer = 'b5c890'
+client_id = f'imbanaco/controladora/{idPlayer}'
 
 options = {
     'broker' : 'broker.windowschannel.us',
     'port' : 1883,
-    # generate client ID with pub prefix randomly
     'client_id' : {client_id},
     'username' : 'emqx',
     'password' : 'public',
@@ -17,12 +16,11 @@ options = {
 
 topics = {
     'subscriber': [
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getChannel',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/channel',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getStatus'
+        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getStatus',
+        f'{clientPlayer}/{sede}/players/channel'
         ],
     'publish':[
         f'{clientPlayer}/{sede}/alternadora/{idPlayer}/status',
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/currentStreaming',
+        f'{clientPlayer}/{sede}/currentStreaming',
     ]
 }
