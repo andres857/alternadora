@@ -16,7 +16,7 @@ options = {
 
 topics = {
     'subscriber': [
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/getStatus',
+        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/request',
         f'{clientPlayer}/{sede}/players/channel'
         ],
     'publish':[

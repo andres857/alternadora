@@ -5,11 +5,6 @@ from Control import ir, system
 import random, json, time, lirc
 
 
-channels = {
-        "currentStreaming": 'caracol',
-    }
-
-
 broker = index.options['broker']
 port = int(index.options['port'])
 client_id = f'python-mqtt-{random.randint(0, 100)}'
@@ -18,7 +13,7 @@ password = index.options['password']
 
 # topics
 
-getStatus = index.topics['subscriber'][0]
+request = index.topics['subscriber'][0]
 channel = index.topics['subscriber'][1]
 
 
@@ -43,21 +38,18 @@ def connect_mqtt() -> mqtt_client:
 def subscribe(client: mqtt_client):
 
 
-    client.subscribe(getStatus)
+    client.subscribe(request)
     client.subscribe(channel)
 
 
-    print(f'Subscription Success to topics \n {getStatus} \n {channel}')
+    print(f'Subscription Success to topics \n {request} \n {channel}')
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         message = json.loads(msg.payload.decode())
 
-        if msg.topic == getStatus:
+        if msg.topic == request:
             if message['status'] == 'get':
                 print('simular publicando estados')
-                # statusdict = system.statusAlternadora()
-                # statusjson = json.dumps(statusdict)
-
                 client.publish(status, json.dumps(system.statusAlternadora()))
 
         elif msg.topic == channel:
@@ -78,6 +70,7 @@ def subscribe(client: mqtt_client):
                 print(f'Simulando cambiar canal a Senal Colombia')
                 time.sleep(0.2)
                 ir.changeChannel('colombia')
+                time.sleep(0.2)
                 client.publish(currentStreaming, json.dumps({"currentStreaming": "senalcolombia"}))
             elif message['channel'] == 'imbanacotv':
                 #ir.changeChannel('imbanaco')
