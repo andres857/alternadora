@@ -1,7 +1,6 @@
 import lirc,time
 from Control import control
 
-
 clientIR = lirc.Client()
 
 decodificador = 'etb'
