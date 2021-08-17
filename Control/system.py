@@ -1,7 +1,7 @@
-import psutil, pprint, json
+import psutil, json
 
 def statusAlternadora():
-    # pprint.pprint(psutil.net_if_addrs())
+
     load = psutil.cpu_percent(interval=None)
     sensors = psutil.sensors_temperatures()['cpu_thermal'][0]
     networkAddress = psutil.net_if_addrs()['eth0'][0]

@@ -1,14 +1,19 @@
 #!/usr/bin/python3
-import random
 
-clientPlayer = 'imbanaco'
+#<---------PORTS BROKER------------->
+# - "1884:1883" # MQTT
+# - "8884:8883" # MQTT/SSL
+# - "7083:8083" # MQTT/WS
+# - "8085:8084" # MQTT/WSS
+
+client = 'imbanaco'
 sede = 'principal'
 idPlayer = 'b5c890'
-client_id = f'imbanaco/controladora/{idPlayer}'
+client_id = f'imbanaco/managechannel/{idPlayer}'
 
 options = {
-    'broker' : 'broker.windowschannel.us',
-    'port' : 1883,
+    'broker' : 'brokerimbanaco.windowschannel.com',
+    'port' : 1884,
     'client_id' : {client_id},
     'username' : 'emqx',
     'password' : 'public',
@@ -16,11 +21,11 @@ options = {
 
 topics = {
     'subscriber': [
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/request',
-        f'{clientPlayer}/{sede}/players/channel'
+        f'{client}/{sede}/alternadora/{idPlayer}/request',
+        f'{client}/{sede}/players/channel'
         ],
     'publish':[
-        f'{clientPlayer}/{sede}/alternadora/{idPlayer}/status',
-        f'{clientPlayer}/{sede}/currentStreaming',
+        f'{client}/{sede}/alternadora/{idPlayer}/status',
+        f'{client}/{sede}/currentStreaming',
     ]
 }
